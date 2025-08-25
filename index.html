@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>實驗參與者入口網站</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1> 實驗參與者入口網站 </h1>
+    </header>
+
+    <main class="container">
+        <div class="card">
+            <h2> 運動與健康問卷 </h2>
+            <p> 分別在經期第一天、結束那一天、排卵試紙2條線自認最深那一天點擊下方按鈕，開始填寫線上問卷。您的數據對我們的研究至關重要。</p>
+            <a href="https://forms.gle/YSvipQTftXDNDZb36" class="button" target="_blank" rel="noopener noreferrer"> 前往填寫問卷 </a>
+        </div>
+
+        <div class="card">
+            <h2> 服務預約系統 </h2>
+            <p> 若您要預約檢測時，請點擊下方按鈕前往服務預約網站。</p>
+            <a href="https://tw.hotcakeapp.com/g/481XRD" class="button" target="_blank" rel="noopener noreferrer">前往預約網站</a>
+        </div>
+
+        <div class="card">
+            <h2> 週期判斷 </h2>
+            <p> 請輸入您上一次月經開始的日期、結束的日期和排卵試紙2條線自認最深那一天，以判斷目前的週期階段。</p>
+            <div class="input-group">
+                <label for="startDate">月經開始日:</label>
+                <input type="date" id="startDate">
+            </div>
+            <div class="input-group">
+                <label for="endDate">月經結束日:</label>
+                <input type="date" id="endDate">
+            </div>
+            <div class="input-group">
+                <label for="ovulationDate">排卵日:</label>
+                <input type="date" id="ovulationDate">
+            </div>
+            <button id="calculateBtn" class="button"> 開始判斷 </button>
+            <div id="result" class="result-box"></div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 守護女鐵人研究計畫團隊 </p>
+    </footer>
+</body>
+    <script>
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const startDateInput = document.getElementById('startDate').value;
+            const endDateInput = document.getElementById('endDate').value;
+            const ovulationDateInput = document.getElementById('ovulationDate').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.style.display = 'flex';
+            resultDiv.style.backgroundColor = '';
+            resultDiv.style.color = '';
+
+            if (!startDateInput) {
+                resultDiv.textContent = '請至少填寫月經開始日。';
+                resultDiv.style.backgroundColor = '#fce4ec';
+                resultDiv.style.color = '#c2185b';
+                return;
+            }
+            
+            const oneDay = 1000 * 60 * 60 * 24;
+
+            // 確保所有日期都設定在當天午夜，以避免時間差導致的錯誤
+            const startDate = new Date(startDateInput);
+            startDate.setHours(0, 0, 0, 0);
+
+            let endDate = null;
+            if (endDateInput) {
+                endDate = new Date(endDateInput);
+                endDate.setHours(0, 0, 0, 0);
+            }
+
+            let ovulationDate = null;
+            let isEstimated = false;
+
+            if (ovulationDateInput) {
+                ovulationDate = new Date(ovulationDateInput);
+                ovulationDate.setHours(0, 0, 0, 0);
+
+                // 修正：檢查排卵日是否在月經期間內或之前
+                if (ovulationDate.getTime() < startDate.getTime() || (endDate && ovulationDate.getTime() <= endDate.getTime())) {
+                    resultDiv.textContent = '排卵日不能早於月經開始日或在經期內，請確認您的輸入。';
+                    resultDiv.style.backgroundColor = '#fce4ec';
+                    resultDiv.style.color = '#c2185b';
+                    return;
+                }
+            } else {
+                // 如果沒有輸入排卵日，則估算為經期開始後第14天
+                ovulationDate = new Date(startDate);
+                ovulationDate.setDate(startDate.getDate() + 14);
+                isEstimated = true;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const diffInDays = Math.floor((today - startDate) / oneDay);
+
+            let period = '';
+            let periodColor = '';
+            let isCurrentDay = false;
+
+            // 根據日期比較，確保判斷順序正確且邏輯嚴謹
+            if (today.getTime() === ovulationDate.getTime()) {
+                period = '排卵日';
+                periodColor = 'ovulation';
+                isCurrentDay = true;
+            } else if (endDate && today.getTime() <= endDate.getTime()) {
+                period = '經期';
+                periodColor = 'menstrual';
+            } else if (today.getTime() > endDate.getTime() && today.getTime() < ovulationDate.getTime()) {
+                period = '濾泡期';
+                periodColor = 'follicular';
+            } else if (today.getTime() > ovulationDate.getTime()) {
+                period = '黃體期';
+                periodColor = 'luteal';
+            } else {
+                resultDiv.textContent = '請確認您輸入的日期。';
+                resultDiv.style.backgroundColor = '#fce4ec';
+                resultDiv.style.color = '#c2185b';
+                return;
+            }
+            
+            let resultText = '目前處於: ' + period;
+            
+            // 只有在非當天的狀況下，才顯示天數
+            if (!isCurrentDay) {
+                resultText += ' (第 ' + (diffInDays + 1) + ' 天)';
+            }
+            
+            if (isEstimated) {
+                resultText += ' (排卵日為預估)';
+            }
+            
+            resultDiv.textContent = resultText;
+            
+            // 根據週期階段設定顏色
+            switch(periodColor) {
+                case 'menstrual':
+                    resultDiv.style.backgroundColor = '#fff3cd';
+                    resultDiv.style.color = '#664d03';
+                    break;
+                case 'follicular':
+                    resultDiv.style.backgroundColor = '#d1e7dd';
+                    resultDiv.style.color = '#0f5132';
+                    break;
+                case 'ovulation':
+                    resultDiv.style.backgroundColor = '#cfe2ff';
+                    resultDiv.style.color = '#0a58ca';
+                    break;
+                case 'luteal':
+                    resultDiv.style.backgroundColor = '#f8d7da';
+                    resultDiv.style.color = '#721c24';
+                    break;
+            }
+        });
+    </script>
+</html>
+

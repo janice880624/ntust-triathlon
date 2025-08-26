@@ -65,4 +65,46 @@
         <p>&copy; 守護女鐵人研究計畫團隊</p>
     </footer>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyButtons = document.querySelectorAll('.copy-button');
+
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.stopPropagation();
+                
+                const link = this.parentElement.querySelector('a.button');
+                
+                if (!link) {
+                    console.error("找不到對應的超連結。");
+                    return;
+                }
+
+                const urlToCopy = link.href;
+
+                // 使用 Clipboard API 進行複製
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(urlToCopy).then(() => {
+                        // 成功複製後，顯示彈窗
+                        alert('複製成功！');
+                    }).catch(err => {
+                        console.error('無法複製網址:', err);
+                        alert('複製失敗，請手動複製網址。');
+                    });
+                } else {
+                    // 舊版瀏覽器或不支援時的備用方案
+                    const tempInput = document.createElement('textarea');
+                    tempInput.value = urlToCopy;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempInput);
+                    
+                    // 成功複製後，顯示彈窗
+                    alert('複製成功！');
+                }
+            });
+        });
+    });
+</script>
 </html>

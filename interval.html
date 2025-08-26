@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>間歇訓練說明</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .content-section {
+            padding: 2rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .content-section p {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .content-section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .content-section ul li {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1> 間歇訓練說明 </h1>
+    </header>
+
+    <div class="content-section">
+    <p>間歇訓練（Interval Training）是一種交替進行高強度運動和低強度恢復的訓練方式。這種訓練可以有效提升心肺功能，並在短時間內燃燒更多熱量</p>
+  
+    <div class="custom-select-container">
+        <label for="workout-select">選擇訓練課表：</label>
+        <div class="custom-select">
+            <div class="select-selected">請選擇項目</div>
+            <div class="select-items select-hide">
+                <div data-value="run">跑步間歇</div>
+                <div data-value="swim">游泳間歇</div>
+                <div data-value="cycle">騎車間歇</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="run-workout" class="workout-details" style="display: none;">
+        <h4>@ I pace ≈ 是你 5 公里比賽的速度，或約 VO₂max 配速</h4>
+        <h4>@ M pace ≈ 你馬拉松比賽能維持的平均配速，通常是最大心率的 75–84% 左右</h4>
+      <h4 class="collapsible-header"> M pace 1 km x n </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 慢跑10分鐘 </li>
+                  <li> 100m x 4 @28s 間休1min </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 1km @M pace、間休1min </li>
+                  <li> 以上重複 n 趟 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 慢跑5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> M pace 2 km x n </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 慢跑10分鐘 </li>
+                  <li> 100m x 4 @28s 間休1min </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 2km @M pace、間休2min </li>
+                  <li> 以上重複 n 趟 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 慢跑5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> I pace 400m x n r 1.5mins </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 慢跑10分鐘 </li>
+                  <li> 100m x 4 @26s 間休1min </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 400m x n @I pace </li>
+                  <li> 每趟跑完原地休1.5分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 慢跑5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+    </div>
+
+    <div id="swim-workout" class="workout-details" style="display: none;">
+      <!-- <h3>游泳間歇訓練：</h3> -->
+
+      <h4 class="collapsible-header"> 100m 間歇組合 X n </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li>200 輕鬆游</li>
+                  <li>50 踢水</li>
+                  <li>50 夾浮板划手</li>
+                  <li>100 輕鬆游</li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li>3 x 300m @ T pace +3秒(間休20秒)、注意姿勢穩定</li>
+                  <li>休1分鐘</li>
+                  <li>以上重複 n 趟</li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li>200m不限泳姿輕鬆游</li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> Progression 400m x n </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆游200m </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> n x 400m 間休20秒、速度一開始輕鬆游、一趟比一趟快，最後一趟用9成力 </li>
+                  <li> 8 x 25m 用最高划頻、(不用太在乎動作細節)，訓練神經肌肉快速反應能力。每趟間休20秒（或是緩游 25m ）。 </li>
+                  <li> 【如果是50m】8 x 50m 前25m用最高划頻、(不用太在乎動作細節)，訓練神經肌肉快速反應能力。後 25m 緩游。 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li>各種泳姿輕鬆游200m</li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> 300m + 100m x n 間歇組合</h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 100 輕鬆游 </li>
+                  <li> 50 x 2 踢水 </li>
+                  <li> 50 x 2 夾浮板划手 </li>
+                  <li> 100 輕鬆游 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 3 x 300m @ T pace +3秒(間休20秒)、注意姿勢穩定 </li>
+                  <li> 休1分鐘 </li>
+                  <li> n x 100m @ T pace (間休15秒) </li>
+                  <li> 休1分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 200m不限泳姿輕鬆游 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> B1 ME+AE </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 200m 速度從慢至快 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 2 x 400m @T pace + 3秒、間休20秒 </li>
+                  <li> 600~1000m 連續游 @T pace + 5秒 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 200m 不限泳姿輕鬆游 </li>
+              </ul>
+          </div>
+      </div>
+    </div>
+
+    <div id="cycle-workout" class="workout-details" style="display: none;">
+      <h4 class="collapsible-header"> Z3 20mins x 3 </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 緩踩5mins </li>
+                  <li> 2 X Muscle tension重踩轉速55-60 rpm, 3mins </li>
+                  <li> 緩和踩3mins </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 3 x 20mins at FTP 80-85%、轉速80-90rpm 每趟中間緩和踩 5 mins</li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> Z3 + MT3 </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆5分鐘 </li>
+                  <li> 110rpm 1min 休息1分鐘重複3趟 </li>
+                  <li> 85% FTP@85-90rpm 3mins </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 80-85% @85-90RPM 4mins </li>
+                  <li> 100% MT@55-60RPM 2mins </li>
+                  <li> 以上重複 3 趟 </li>
+                  <li> 休息4分鐘 </li>
+                  <li> 以上重複 3 組 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> Z3 30m x 2 </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆5分鐘 </li>
+                  <li> 迴轉速110rpm踩1分鐘 x 3趟、每趟中間休1分鐘 </li>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> Zone 3 FTP 75-85% 30分鐘 X 2 @85-90rpm </li>
+                  <li> 每趟中間緩和踩6分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> Muscle Tension 5min x 7 </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆5分鐘 </li>
+                  <li> 迴轉速110rpm踩1分鐘 x 3趟、每趟中間休1分鐘 </li>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> FTP 100% 、維持55rpm迴轉速踩5分鐘 </li>
+                  <li> 輕鬆踩5分鐘 </li>
+                  <li> 以上重複7趟 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> Z3 FTP 80% 30m with 30s h/c x 2 every n mins </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆5分鐘 </li>
+                  <li> 迴轉速110rpm踩1分鐘 x 3趟、每趟中間休1分鐘 </li>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> Zone 3 FTP 80% 30分鐘 X 2 @85-90rpm，中間每 n 分鐘拉快轉速至100rpm 30秒，每趟中間緩和踩6分鐘 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header"> Z3 + MT3 HL </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆5分鐘 </li>
+                  <li> 110rpm 1min 休息1分鐘重複3趟 </li>
+                  <li> 85% FTP@85-90rpm 3mins </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 85-88% @85-90RPM 4mins </li>
+                  <li> 100% MT@55-60RPM 3mins </li>
+                  <li> 重複 3 趟，休息4分鐘 </li>
+                  <li> 重複 3 組 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header">  Z3 + MT3 </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆5分鐘 </li>
+                  <li> 110rpm 1min 休息1分鐘重複3趟 </li>
+                  <li> 85% FTP@85-90rpm 3mins </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 85-88% @85-90RPM 4mins </li>
+                  <li> 100% MT@55-60RPM 2mins </li>
+                  <li> 重複 3 趟，休息4分鐘 </li>
+                  <li> 重複 2 組 </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header">  SST 88-93% </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> Easy 5 mins </li>
+                  <li> 110rpm 1 min、緩和 1 min </li>
+                  <li> 110rpm 1 min、緩和 1 min </li>
+                  <li> 110rpm 1 mins </li>
+                  <li> Easy 4 mins </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> 5 mins at 88% @85-90rpm </li>
+                  <li> 4 mins at 90% @85-90rpm </li>
+                  <li> 4 mins at 93% @85-90rpm </li>
+                  <li> Easy 4 mins </li>
+                  <li> Rep 4 times </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> 輕鬆踩5分鐘 </li>
+              </ul>
+          </div>
+      </div>
+
+      <h4 class="collapsible-header">  Muscle Tension 10mins x 4 </h4>
+      <div class="collapsible-content">
+          <div class="workout-group">
+              <h5>熱身:</h5>
+              <ul>
+                  <li> 輕鬆踩7 mins </li>
+                  <li> 抽車@75 rpm、90% FTP 1min </li>
+                  <li> Rest 1 min </li>
+                  <li> 抽車@75 rpm、90% FTP 1min </li>
+                  <li> Rest 2 mins </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>主課表:</h5>
+              <ul>
+                  <li> Muscle tension 55 rpm @90% FTP for 10 mins </li>
+                  <li> Rest 5 mins </li>
+                  <li> Repeat 4 times </li>
+              </ul>
+          </div>
+          <div class="workout-group">
+              <h5>緩和:</h5>
+              <ul>
+                  <li> Easy 10 mins </li>
+              </ul>
+          </div>
+      </div>
+
+      
+    </div>
+
+
+    <p>請務必在訓練前後進行足夠的熱身與緩和，並隨時注意身體狀況，若有不適應立即停止。</p>
+    
+    <a href="index.html" class="back-link">&larr; 返回主頁</a>
+</div>
+
+    <footer>
+        <p>&copy; 守護女鐵人研究計畫團隊 </p>
+    </footer>
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // 新的選單互動腳本
+        const customSelect = document.querySelector('.custom-select');
+        const selectSelected = customSelect.querySelector('.select-selected');
+        const selectItems = customSelect.querySelector('.select-items');
+        const workoutDetails = document.querySelectorAll('.workout-details');
+
+        // 點擊選單框，顯示或隱藏選項
+        selectSelected.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeAllSelect(this);
+            selectItems.classList.toggle('select-hide');
+            this.classList.toggle('select-arrow-active');
+        });
+
+        // 點擊選項，更新顯示並切換課表
+        selectItems.querySelectorAll('div').forEach(item => {
+            item.addEventListener('click', function() {
+                const selectedValue = this.getAttribute('data-value');
+                selectSelected.innerHTML = this.innerHTML;
+                
+                // 隱藏所有課表
+                workoutDetails.forEach(detail => {
+                    detail.style.display = 'none';
+                });
+                
+                // 顯示選擇的課表
+                const selectedWorkout = document.getElementById(selectedValue + '-workout');
+                if (selectedWorkout) {
+                    selectedWorkout.style.display = 'block';
+                }
+                
+                closeAllSelect(selectSelected);
+            });
+        });
+
+        function closeAllSelect(elmnt) {
+            const selectItems = document.querySelectorAll('.select-items');
+            const selectSelected = document.querySelectorAll('.select-selected');
+            selectSelected.forEach(selected => {
+                if (selected !== elmnt) {
+                    selected.classList.remove('select-arrow-active');
+                }
+            });
+            selectItems.forEach(item => {
+                item.classList.add('select-hide');
+            });
+        }
+        
+        document.addEventListener('click', closeAllSelect);
+
+        const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+
+        collapsibleHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                // 切換下一個兄弟元素的顯示狀態
+                const content = this.nextElementSibling;
+                if (content.style.display === 'block') {
+                    content.style.display = 'none';
+                    this.classList.remove('active'); // 移除 active 類別
+                } else {
+                    content.style.display = 'block';
+                    this.classList.add('active');    // 新增 active 類別
+                }
+            });
+        });
+    });
+</script>
+</html>

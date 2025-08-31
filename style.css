@@ -373,7 +373,7 @@ main {
 /* 肌力訓練頁面專用樣式 */
 .strength-card {
     width: 100%;
-    max-width: 900px;
+    max-width: 1200px;
 }
 
 .color-block {
@@ -402,9 +402,10 @@ main {
 
 .photo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 15px;
     justify-content: center;
+    align-content: center;
     align-items: center;
 }
 

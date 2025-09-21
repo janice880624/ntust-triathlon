@@ -45,11 +45,13 @@ main {
 
 /* Main Container for Cards */
 .container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap;
     padding: 2rem 1rem;
-    max-width: 1200px; /* 設定最大寬度，避免在超大螢幕上拉太開 */
-    margin: 0 auto; /* 讓容器本身在頁面中置中 */
-    column-count: 3; /* 關鍵：設定為 3 欄 */
-    column-gap: 2rem;  /* 關鍵：設定欄與欄之間的間距 */
+    gap: 2rem;
+    flex-grow: 1; /* 新增這行 */
 }
 
 /* Card Styles */

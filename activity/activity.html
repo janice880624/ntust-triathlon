@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google 風格行事曆</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .calendar-grid {
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+        }
+        .day-cell {
+            min-height: 120px;
+        }
+        .event-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        /* Google 配色 */
+        .event-google-blue { background-color: #4285F4; }
+        .event-google-green { background-color: #34A853; }
+        .event-google-yellow { background-color: #FBBC05; }
+        .event-google-red { background-color: #EA4335; }
+        
+        /* 響應式調整 */
+        @media (max-width: 768px) {
+            .day-cell {
+                min-height: 100px;
+            }
+        }
+        @media (max-width: 640px) {
+            .day-cell {
+                min-height: 80px;
+                padding: 0.25rem;
+            }
+            .event-item .truncate {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- 在 md (中等) 螢幕以上為 flex-row，以下為 flex-col -->
+    <div class="flex flex-col md:flex-row md:h-screen">
+        <!-- 左側邊欄 -->
+        <!-- 在 md 以下寬度為 100%，以上為 w-64。並調整邊框 -->
+        <aside class="w-full md:w-64 flex-shrink-0 bg-white border-b md:border-r md:border-b-0 border-gray-200 p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-8">行事曆</h1>
+            <h2 class="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-4">活動類型</h2>
+            <div id="event-filter" class="space-y-3">
+                <div>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" data-event-type="lecture" class="form-checkbox h-5 w-5 text-blue-600 rounded" checked>
+                        <span class="event-dot event-google-blue"></span>
+                        <span>講座</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" data-event-type="training" class="form-checkbox h-5 w-5 text-red-600 rounded" checked>
+                        <span class="event-dot event-google-red"></span>
+                        <span>肌力訓練</span>
+                    </label>
+                </div>
+                <div>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" data-event-type="competition" class="form-checkbox h-5 w-5 text-yellow-600 rounded" checked>
+                         <span class="event-dot event-google-yellow"></span>
+                        <span>比賽</span>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主要內容 -->
+        <!-- 調整 padding 並允許內容滾動 -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto">
+            <!-- 頂部控制項 -->
+            <!-- 使用 flex-wrap 讓元件在空間不足時自動換行 -->
+            <header class="flex flex-wrap items-center justify-between gap-4 mb-8">
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <button id="prev-month" class="p-2 rounded-full hover:bg-gray-200">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <h2 id="current-month-year" class="text-xl sm:text-2xl font-semibold text-gray-700"></h2>
+                    <button id="next-month" class="p-2 rounded-full hover:bg-gray-200">
+                        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+                <button id="today-btn" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-100">
+                    今天
+                </button>
+            </header>
+
+            <!-- 桌面版：行事曆網格 -->
+            <div id="calendar-grid-container" class="hidden md:block bg-white rounded-lg shadow-sm border border-gray-200">
+                <!-- 星期標頭 -->
+                <div class="grid calendar-grid border-b border-gray-200">
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">一</div>
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">二</div>
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">三</div>
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">四</div>
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">五</div>
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">六</div>
+                    <div class="text-center py-3 text-xs sm:text-sm font-medium text-gray-500 uppercase">日</div>
+                </div>
+                <!-- 日期儲存格 -->
+                <div id="calendar-body" class="grid calendar-grid">
+                    <!-- JavaScript 將會動態生成日期 -->
+                </div>
+            </div>
+
+            <!-- 手機版：活動列表 -->
+            <div id="calendar-list-view" class="block md:hidden bg-white rounded-lg shadow-sm border border-gray-200">
+                <!-- JS 動態生成列表 -->
+            </div>
+        </main>
+    </div>
+
+    <!-- 活動詳情 Modal -->
+    <div id="event-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md relative">
+            <button id="modal-close-btn" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h3 id="modal-title" class="text-2xl font-bold mb-4 text-gray-800"></h3>
+            <div class="space-y-3 text-gray-700">
+                <p><strong class="font-semibold w-16 inline-block">日期：</strong> <span id="modal-date"></span></p>
+                <p><strong class="font-semibold w-16 inline-block">時間：</strong> <span id="modal-time"></span></p>
+                <p><strong class="font-semibold w-16 inline-block">地點：</strong> <span id="modal-location"></span></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const calendarBody = document.getElementById('calendar-body');
+            const listViewContainer = document.getElementById('calendar-list-view');
+            const currentMonthYear = document.getElementById('current-month-year');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const todayBtn = document.getElementById('today-btn');
+            const filterContainer = document.getElementById('event-filter');
+            
+            const eventModal = document.getElementById('event-modal');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDate = document.getElementById('modal-date');
+            const modalTime = document.getElementById('modal-time');
+            const modalLocation = document.getElementById('modal-location');
+
+            let currentDate = new Date();
+            let currentMonth = currentDate.getMonth();
+            let currentYear = currentDate.getFullYear();
+            
+            const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQM6PM2ABrMIqaqGeWizFThWZyKYd_SvrhuKeJJx-Ppvwr9eY2Mip4uvpgF2NOTN2KBUJrdu8gJ8SGV/pub?output=csv';
+            let events = [];
+
+            async function fetchEventsFromSheet(url) {
+                // ... (此函式內容不變)
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error('網路回應錯誤');
+                    const csvText = await response.text();
+                    const lines = csvText.trim().split('\n');
+                    const headers = lines[0].split(',').map(h => h.trim());
+                    const dateIndex = headers.indexOf('date');
+                    const titleIndex = headers.indexOf('title');
+                    const typeIndex = headers.indexOf('type');
+                    const timeIndex = headers.indexOf('time');
+                    const locationIndex = headers.indexOf('location');
+                    if (dateIndex === -1 || titleIndex === -1 || typeIndex === -1) {
+                        console.error('CSV 標頭不正確');
+                        return [];
+                    }
+                    return lines.slice(1).map(line => {
+                        const values = line.split(',').map(v => v.trim());
+                        if (values.length < 3) return null;
+                        const dateParts = values[dateIndex].split('-');
+                        const date = new Date(parseInt(dateParts[0]), parseInt(dateParts[1]) - 1, parseInt(dateParts[2]));
+                        return { date, title: values[titleIndex], type: values[typeIndex], time: timeIndex > -1 ? values[timeIndex] : '未提供', location: locationIndex > -1 ? values[locationIndex] : '未提供' };
+                    }).filter(e => e && e.title);
+                } catch (error) {
+                    console.error('無法從 Google Sheet 獲取活動資料:', error);
+                    alert('無法載入活動資料。');
+                    return [];
+                }
+            }
+
+            const typeColors = { lecture: 'google-blue', training: 'google-red', competition: 'google-yellow' };
+
+            function getSelectedEventTypes() {
+                return Array.from(filterContainer.querySelectorAll('input:checked')).map(cb => cb.dataset.eventType);
+            }
+
+            function openModal(event) {
+                modalTitle.textContent = event.title;
+                modalDate.textContent = event.date.toLocaleDateString('zh-TW');
+                modalTime.textContent = event.time;
+                modalLocation.textContent = event.location;
+                eventModal.classList.remove('hidden');
+                eventModal.classList.add('flex');
+            }
+
+            function closeModal() {
+                eventModal.classList.add('hidden');
+                eventModal.classList.remove('flex');
+            }
+
+            function generateGridView(month, year) {
+                calendarBody.innerHTML = '';
+                const firstDay = (new Date(year, month, 1).getDay() + 6) % 7;
+                const daysInMonth = 32 - new Date(year, month, 32).getDate();
+                for (let i = 0; i < firstDay; i++) {
+                    calendarBody.innerHTML += `<div class="day-cell border-r border-b border-gray-200 bg-gray-50"></div>`;
+                }
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const today = new Date();
+                    const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+                    let cellHTML = `<div class="day-cell relative p-2 border-r border-b border-gray-200 flex flex-col"><span class="text-sm self-start ${isToday ? 'bg-blue-600 text-white rounded-full h-7 w-7 flex items-center justify-center font-semibold' : 'text-gray-700'}">${day}</span><div class="event-container mt-1 space-y-1 overflow-hidden">`;
+                    const selectedTypes = getSelectedEventTypes();
+                    const dayEvents = events.filter(e => e.date.getDate() === day && e.date.getMonth() === month && e.date.getFullYear() === year && selectedTypes.includes(e.type));
+                    dayEvents.forEach(event => {
+                        const eventIndex = events.indexOf(event);
+                        const eventColor = typeColors[event.type] || 'google-blue';
+                        const bgColor = `bg-${eventColor.split('-')[1]}-100`;
+                        const textColor = `text-${eventColor.split('-')[1]}-800`;
+                        cellHTML += `<div data-event-index="${eventIndex}" class="event-item flex items-center text-xs p-1 rounded-md ${bgColor} ${textColor} cursor-pointer hover:opacity-80"><span class="event-dot event-${eventColor} mr-2 flex-shrink-0"></span><span class="truncate">${event.title}</span></div>`;
+                    });
+                    cellHTML += '</div></div>';
+                    calendarBody.innerHTML += cellHTML;
+                }
+            }
+
+            function generateListView(month, year) {
+                listViewContainer.innerHTML = '';
+                const selectedTypes = getSelectedEventTypes();
+                const monthEvents = events.filter(e => e.date.getMonth() === month && e.date.getFullYear() === year && selectedTypes.includes(e.type));
+                monthEvents.sort((a, b) => a.date.getDate() - b.date.getDate());
+
+                if (monthEvents.length === 0) {
+                    listViewContainer.innerHTML = '<p class="text-center text-gray-500 p-8">這個月沒有活動。</p>';
+                    return;
+                }
+
+                const groupedEvents = monthEvents.reduce((acc, event) => {
+                    const day = event.date.getDate();
+                    if (!acc[day]) acc[day] = [];
+                    acc[day].push(event);
+                    return acc;
+                }, {});
+
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                for (const day in groupedEvents) {
+                    const dayEvents = groupedEvents[day];
+                    const dateObj = dayEvents[0].date;
+                    const weekday = weekdays[dateObj.getDay()];
+
+                    let dayHTML = `<div class="flex items-stretch space-x-4 p-4 border-b last:border-b-0">
+                        <div class="text-center w-12 flex-shrink-0 pt-1">
+                            <p class="text-sm text-gray-500">${weekday}</p>
+                            <p class="text-2xl font-semibold text-gray-800">${day}</p>
+                        </div>
+                        <div class="flex-grow space-y-2">`;
+
+                    dayEvents.forEach(event => {
+                        const eventIndex = events.indexOf(event);
+                        const eventColor = typeColors[event.type] || 'google-blue';
+                        const bgColor = `bg-${eventColor.split('-')[1]}-100`;
+                        const textColor = `text-${eventColor.split('-')[1]}-800`;
+
+                        dayHTML += `<div data-event-index="${eventIndex}" class="event-item cursor-pointer p-3 rounded-lg ${bgColor} ${textColor}">
+                            <p class="font-semibold">${event.title}</p>
+                            <p class="text-sm opacity-80">${event.time} @ ${event.location}</p>
+                        </div>`;
+                    });
+                    dayHTML += '</div></div>';
+                    listViewContainer.innerHTML += dayHTML;
+                }
+            }
+            
+            function renderCalendar(month, year) {
+                currentMonthYear.textContent = `${year} 年 ${month + 1} 月`;
+                generateGridView(month, year);
+                generateListView(month, year);
+            }
+
+            function handleEventClick(e) {
+                const eventEl = e.target.closest('.event-item');
+                if (eventEl) {
+                    const eventIndex = eventEl.dataset.eventIndex;
+                    const eventData = events[eventIndex];
+                    if(eventData) openModal(eventData);
+                }
+            }
+
+            calendarBody.addEventListener('click', handleEventClick);
+            listViewContainer.addEventListener('click', handleEventClick);
+            modalCloseBtn.addEventListener('click', closeModal);
+            eventModal.addEventListener('click', e => { if (e.target === eventModal) closeModal(); });
+
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+                renderCalendar(currentMonth, currentYear);
+            });
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                renderCalendar(currentMonth, currentYear);
+            });
+            todayBtn.addEventListener('click', () => {
+                const today = new Date();
+                currentMonth = today.getMonth();
+                currentYear = today.getFullYear();
+                renderCalendar(currentMonth, currentYear);
+            });
+            filterContainer.addEventListener('change', () => {
+                renderCalendar(currentMonth, currentYear);
+            });
+            
+            events = await fetchEventsFromSheet(googleSheetURL);
+            renderCalendar(currentMonth, currentYear);
+        });
+    </script>
+</body>
+</html>
+
